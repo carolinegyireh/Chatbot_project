@@ -53,7 +53,7 @@ def chatbot_response(message):
     response = get_response(intents, dict_)
     return response
 
-# Create the Gradio interface
+# The Gradio interface
 iface = gr.Interface(
     fn=chatbot_response,
     inputs="text",
