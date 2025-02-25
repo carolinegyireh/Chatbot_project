@@ -1,0 +1,8 @@
+numpy
+pandas
+nltk
+tensorflow
+transformers
+matplotlib
+torch
+gradio
