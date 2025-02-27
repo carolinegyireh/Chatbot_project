@@ -9,10 +9,10 @@ from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer
 
 # Load necessary files
-model = load_model('./data/model/chatbotmodel.keras')
-words = pickle.load(open('./data/model/words.pkl', 'rb'))
-classes = pickle.load(open('./data/model/classes.pkl', 'rb'))
-with open("./data/data.json", "r") as json_file:
+model = load_model('../data/models/med-botmodel.keras')
+words = pickle.load(open('../data/words.pkl', 'rb'))
+classes = pickle.load(open('../data/classes.pkl', 'rb'))
+with open("../data/med_quad.json", "r") as json_file:
     dict_ = json.load(json_file)
 
 # Load the BERT tokenizer and model from Hugging Face
