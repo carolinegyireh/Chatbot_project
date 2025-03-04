@@ -82,7 +82,60 @@ def get_response(predicted_intents, message):
 
     return random.choice(unknown_responses)
 
-# Streamlit UI
+# Streamlit UI with custom styling
+st.markdown("""
+    <style>
+    body {
+        background-color: #f0f0f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .stTextInput input {
+        border-radius: 15px;
+        padding: 10px;
+        font-size: 16px;
+        width: 80%;
+    }
+    .stButton>button {
+        border-radius: 10px;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+    }
+    .stMarkdown {
+        color: #333333;
+    }
+    .chat-container {
+        background-color: #ffffff;
+        border-radius: 20px;
+        padding: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+    .user-bubble {
+        background-color: #1d72b8;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        max-width: 80%;
+        margin-left: auto;
+    }
+    .bot-bubble {
+        background-color: #e2e2e2;
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        max-width: 80%;
+        margin-right: auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Add chatbot title and introductory text
 st.title("Your Healthcare Buddy 🤖")
 st.markdown("_Hi! I'm your medical chatbot. What medical question can I help with today?_")
 
@@ -99,12 +152,16 @@ if user_input:
     response = get_response(predicted_intents, user_input)
     st.session_state.history.append(("You: " + user_input, "Bot: " + response))
 
-# Display the chat history
-for user_message, bot_response in st.session_state.history:
-    st.write(user_message)
-    st.write(bot_response)
+# Display the chat history with styled chat bubbles
+chat_container = st.container()
+with chat_container:
+    for user_message, bot_response in st.session_state.history:
+        # Display user message as a chat bubble
+        st.markdown(f'<div class="user-bubble">{user_message}</div>', unsafe_allow_html=True)
+        # Display bot response as a chat bubble
+        st.markdown(f'<div class="bot-bubble">{bot_response}</div>', unsafe_allow_html=True)
 
-# Reset chat history
+# Reset chat history button
 if st.button("Reset Chat"):
     st.session_state.history = []
     st.experimental_rerun()
