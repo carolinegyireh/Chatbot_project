@@ -2,16 +2,17 @@ import numpy as np
 import json
 import pickle
 import torch
-import gradio as gr
+import streamlit as st
 from transformers import BertTokenizer, BertModel
 from tensorflow.keras.models import load_model
 from nltk.stem import WordNetLemmatizer
+import random
 
 # path to necessary files
-MODEL_PATH = "/content/med-botmodel.keras"
-WORDS_PATH = "/content/words.pkl"
-CLASSES_PATH = "/content/classes.pkl"
-INTENTS_PATH = "/content/med_quad.json"
+MODEL_PATH = "data/models/med-botmodel.keras"
+WORDS_PATH = "data/words.pkl"
+CLASSES_PATH = "data/classes.pkl"
+INTENTS_PATH = "data/med_quad.json"
 
 # Load model and necessary data
 model = load_model(MODEL_PATH)
@@ -81,32 +82,29 @@ def get_response(predicted_intents, message):
 
     return random.choice(unknown_responses)
 
-# Gradio chatbot function with conversation history
-def chatbot_response(message, chat_history=[]):
-    predicted_intents = predict_class(message)
-    response = get_response(predicted_intents, message)
-    chat_history.append(("You: " + message, "Bot: " + response))
+# Streamlit UI
+st.title("Your Healthcare Buddy 🤖")
+st.markdown("_Hi! I'm your medical chatbot. What medical question can I help with today?_")
 
-    return chat_history, chat_history
+# Create a session state to store conversation history
+if 'history' not in st.session_state:
+    st.session_state.history = []
 
-# Gradio UI
-with gr.Blocks(theme="huggingface") as interface:
-    gr.Markdown("## Your Healthcare Buddy 🤖 ")
-    gr.Markdown("_Hi! I'm your medical chatbot. What medical question can I help with today?_")
+# Text input for user message
+user_input = st.text_input("Your Message", "")
 
-    chat_history = gr.State([])  # Stores conversation history
+# Function to update and display chat history
+if user_input:
+    predicted_intents = predict_class(user_input)
+    response = get_response(predicted_intents, user_input)
+    st.session_state.history.append(("You: " + user_input, "Bot: " + response))
 
-    with gr.Row():
-        chatbot_display = gr.Chatbot()  # Chatbot UI
-        reset_button = gr.Button("Reset Chat")
+# Display the chat history
+for user_message, bot_response in st.session_state.history:
+    st.write(user_message)
+    st.write(bot_response)
 
-    user_input = gr.Textbox(label="Your Message", placeholder="Type your question here...")
-
-    # update chat history when user sends a message
-    user_input.submit(chatbot_response, inputs=[user_input, chat_history], outputs=[chatbot_display, chat_history])
-
-    # Reset button to clear chat history
-    reset_button.click(lambda: ([], []), inputs=[], outputs=[chatbot_display, chat_history])
-
-# Launch the Gradio interface
-interface.launch()
+# Reset chat history
+if st.button("Reset Chat"):
+    st.session_state.history = []
+    st.experimental_rerun()
