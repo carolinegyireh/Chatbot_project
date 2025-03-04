@@ -86,23 +86,25 @@ def get_response(predicted_intents, message):
 st.markdown("""
     <style>
     body {
-        background-color: #f0f0f5;
+        background-color: #f7e3e3;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .stTextInput input {
-        border-radius: 15px;
+        border-radius: 20px;
         padding: 10px;
-        font-size: 16px;
-        width: 80%;
+        font-size: 18px;
+        width: 90%;
+        border: 2px solid #f2a7a7;
     }
     .stButton>button {
-        border-radius: 10px;
-        background-color: #4CAF50;
+        border-radius: 15px;
+        background-color: #f8b0b0;
         color: white;
-        padding: 10px 20px;
+        padding: 12px 25px;
+        font-size: 16px;
     }
     .stButton>button:hover {
-        background-color: #45a049;
+        background-color: #ff9b9b;
     }
     .stMarkdown {
         color: #333333;
@@ -117,18 +119,18 @@ st.markdown("""
     .user-bubble {
         background-color: #1d72b8;
         color: white;
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        padding: 12px;
+        border-radius: 15px;
+        margin-bottom: 12px;
         max-width: 80%;
         margin-left: auto;
     }
     .bot-bubble {
-        background-color: #e2e2e2;
-        color: black;
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        background-color: #f3f3f3;
+        color: #333333;
+        padding: 12px;
+        border-radius: 15px;
+        margin-bottom: 12px;
         max-width: 80%;
         margin-right: auto;
     }
@@ -136,21 +138,24 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Add chatbot title and introductory text
-st.title("Your Healthcare Buddy 🤖")
-st.markdown("_Hi! I'm your medical chatbot. What medical question can I help with today?_")
+st.title("💖 Your Cute Healthcare Buddy 💖")
+st.markdown("_Hi! I'm your healthcare chatbot. Ask me anything about medical conditions, and I'll do my best to help!_")
 
 # Create a session state to store conversation history
 if 'history' not in st.session_state:
     st.session_state.history = []
 
-# Text input for user message
-user_input = st.text_input("Your Message", "")
+# Text input for user message with placeholder and auto-clear
+user_input = st.text_input("Type your question here...", "")
 
 # Function to update and display chat history
 if user_input:
     predicted_intents = predict_class(user_input)
     response = get_response(predicted_intents, user_input)
     st.session_state.history.append(("You: " + user_input, "Bot: " + response))
+
+    # Automatically clear input box after submission
+    st.experimental_rerun()
 
 # Display the chat history with styled chat bubbles
 chat_container = st.container()
