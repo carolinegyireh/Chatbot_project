@@ -145,8 +145,8 @@ st.markdown("_Hi! I'm your healthcare chatbot. Ask me anything about medical con
 if 'history' not in st.session_state:
     st.session_state.history = []
 
-# Text input for user message with placeholder
-user_input = st.text_input("Type your question here...", "", key="user_input")
+# Text input for user message with placeholder and auto-clear
+user_input = st.text_input("Type your question here...", "")
 
 # Function to update and display chat history
 if user_input:
@@ -154,8 +154,8 @@ if user_input:
     response = get_response(predicted_intents, user_input)
     st.session_state.history.append(("You: " + user_input, "Bot: " + response))
 
-    # Clear the input box after submitting the question
-    st.session_state.user_input = ""
+    # Automatically clear input box after submission
+    st.experimental_rerun()
 
 # Display the chat history with styled chat bubbles
 chat_container = st.container()
@@ -169,4 +169,4 @@ with chat_container:
 # Reset chat history button
 if st.button("Reset Chat"):
     st.session_state.history = []
-    st.session_state.user_input = ""  # Clear the user input field
+    st.experimental_rerun()
